@@ -53,7 +53,7 @@ app.get('/connect',async(req,res) => {
 })
 
 
-//add order in database
+//add orders in database
 app.post('/placeOrder', (req, res) => {
     const file = req.files.myFile;
     const name = req.body.name;
