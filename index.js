@@ -53,42 +53,38 @@ app.get('/connect',async(req,res) => {
 })
 
 
-//add orders in database
-app.post('/placeOrder',async (req, res) => {
-    try{
-        const file = req.files.myFile;
-        const name = req.body.name;
-        const email = req.body.email;
-        const projectName = req.body.projectName;
-        const details = req.body.details;
-        const price = req.body.price;
-        const userEmail = req.body.userEmail;
-        const filePath = `${__dirname}/orderImages/${file.name}`
-        file.mv(filePath,async (err) => {
-            if (err) {
-                res.send(err)
-            }
+//add order in database
+app.post('/placeOrder', (req, res) => {
+    const file = req.files.myFile;
+    const name = req.body.name;
+    const email = req.body.email;
+    const projectName = req.body.projectName;
+    const details = req.body.details;
+    const price = req.body.price;
+    const userEmail = req.body.userEmail;
+    const filePath = `${__dirname}/orderImages/${file.name}`
+    file.mv(filePath, (err) => {
+        if (err) {
+            res.send(err)
+        }
 
-            const image = fs.readFileSync(filePath)
-            const enImg = image.toString('base64')
-            const img = {
-                contentType: file.mimetype,
-                img: Buffer.from(enImg, 'base64')
-            }
-            const status = 'pending';
-            const orderData = { name, email, projectName, details, price, userEmail, status, img }
-            const orderSave = await connection.orderModel(orderData)
-            orderSave.save()
-                .then(result => {
-                    fs.remove(filePath, err => {
-                        res.send(err)
-                    })
-                    res.send(result)
+        const image = fs.readFileSync(filePath)
+        const enImg = image.toString('base64')
+        const img = {
+            contentType: file.mimetype,
+            img: Buffer(enImg, 'base64')
+        }
+        const status = 'pending';
+        const orderData = { name, email, projectName, details, price, userEmail, status, img }
+        const orderSave = new connection.orderModel(orderData)
+        orderSave.save()
+            .then(result => {
+                fs.remove(filePath, err => {
+                    console.log(err)
                 })
-        })
-    }catch(err){
-        res.send(err)
-    }
+                res.send(result)
+            })
+    })
 })
 
 
