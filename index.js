@@ -72,11 +72,11 @@ app.post('/placeOrder', (req, res) => {
         const enImg = image.toString('base64')
         const img = {
             contentType: file.mimetype,
-            img: Buffer(enImg, 'base64')
+            img: Buffer.from(enImg, 'base64')
         }
         const status = 'pending';
         const orderData = { name, email, projectName, details, price, userEmail, status, img }
-        const orderSave = new connection.orderModel(orderData)
+        const orderSave = connection.orderModel(orderData)
         orderSave.save()
             .then(result => {
                 fs.remove(filePath, err => {
