@@ -76,7 +76,7 @@ app.post('/placeOrder', (req, res) => {
         }
         const status = 'pending';
         const orderData = { name, email, projectName, details, price, userEmail, status, img }
-        const orderSave = connection.orderModel(orderData)
+        const orderSave =new connection.orderModel(orderData)
         orderSave.save()
             .then(result => {
                 fs.remove(filePath, err => {
